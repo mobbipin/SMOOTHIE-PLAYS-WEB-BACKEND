@@ -1,18 +1,33 @@
 {
-  "name": "smoothie_plays_web",
+  "name": "smoothie-plays-web-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mobbipin/SMOOTHIE-PLAYS-WEB-BACKEND.git"
   },
   "keywords": [],
+  "type": "module",
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mobbipin/SMOOTHIE-PLAYS-WEB-BACKEND/issues"
+  },
+  "homepage": "https://github.com/mobbipin/SMOOTHIE-PLAYS-WEB-BACKEND#readme",
+  "description": "",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "mongoose": "^8.8.3",
-    "smoothie_plays_web": "file:"
+    "@clerk/express": "^1.3.33",
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.4",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
