@@ -1,12 +1,12 @@
-import express from "express";
 import dotenv from "dotenv";
-import usersRoutes from "./routes/user.route.js";
-import adminRoutes from "./routes/admin.route.js";
-import authRoutes from  "./routes/auth.route.js";
+import express from "express";
 import { connectDB } from "./lib/db.js";
-import songRoutes from "./routes/song.route.js";
+import adminRoutes from "./routes/admin.route.js";
 import albumRoutes from "./routes/album.route.js";
-import statsRoutes from "./routes/stats.route.js"
+import authRoutes from "./routes/auth.route.js";
+import songRoutes from "./routes/song.route.js";
+import statsRoutes from "./routes/stats.route.js";
+import usersRoutes from "./routes/user.route.js";
 
 dotenv.config();
 
