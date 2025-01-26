@@ -1,2 +1,7 @@
 node_modules/
-env
+.env
+/src/controller/
+/src/lib/cloudinary.js
+/src/lib/socket.js
+/src/seeds
+/src/models
