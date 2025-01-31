@@ -1,57 +1,31 @@
-import dotenv from "dotenv";
-import express from "express";
+// src/index.js
 
-import cors from "cors";
-import { createServer } from "http";
-import path from "path";
-
-
-
-import { connectDB } from "./lib/db.js";
-import adminRoutes from "./routes/admin.route.js";
-import albumRoutes from "./routes/album.route.js";
-import authRoutes from "./routes/auth.route.js";
-import songRoutes from "./routes/song.route.js";
-import statRoutes from "./routes/stat.route.js";
-import userRoutes from "./routes/user.route.js";
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import authRoutes from './routes/auth.route.js';
 
 dotenv.config();
 
-const __dirname = path.resolve();
 const app = express();
-const PORT = process.env.PORT;
 
-const httpServer = createServer(app);
-initializeSocket(httpServer);
+app.use(cors());
+// Middleware to parse incoming JSON requests
+app.use(express.json());
 
-app.use(
-	cors({
-		origin: "http://localhost:3000",
-		credentials: true,
-	})
-);
+// Use the authentication routes
+app.use('/api/auth', authRoutes);
 
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
-app.use("/api/users", userRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/songs", songRoutes);
-app.use("/api/albums", albumRoutes);
-app.use("/api/stats", statRoutes);
-
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "../frontend/dist")));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
-	});
-}
-
-// error handler
-app.use((err, req, res, next) => {
-	res.status(500).json({ message: process.env.NODE_ENV === "production" ? "Internal server error" : err.message });
-});
-
-httpServer.listen(PORT, () => {
-	console.log("Server is running on port " + PORT);
-	connectDB();
-});
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
