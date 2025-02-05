@@ -1,10 +1,8 @@
-import express from 'express';
-import { login, signup } from '../controller/auth.controller.js';
-import upload from '../middleware/multer.middleware.js';
+import { Router } from "express";
+import { authCallback } from "../controller/auth.controller.js";
 
-const router = express.Router();
+const router = Router();
 
-router.post('/signup', upload.single('photo'), signup); 
-router.post('/login', login);
+router.post("/callback", authCallback);
 
 export default router;

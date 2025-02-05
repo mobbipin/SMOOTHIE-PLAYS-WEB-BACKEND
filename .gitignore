@@ -7,3 +7,13 @@ node_modules/
 /src/models/album.model.js
 /src/models/message.model.js
 /src/models/song.model.js
+
+/src/controller/song.controller.js
+/src/controller/stat.controller.js
+/src/controller/album.controller.js
+
+/src/routes/album.route.js
+/src/routes/song.route.js
+/src/routes/stat.route.js
+
+
