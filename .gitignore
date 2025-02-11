@@ -8,7 +8,7 @@ node_modules/
 /src/models/message.model.js
 /src/models/song.model.js
 
-/src/controller/song.controller.js
+
 /src/controller/stat.controller.js
 /src/controller/album.controller.js
 
