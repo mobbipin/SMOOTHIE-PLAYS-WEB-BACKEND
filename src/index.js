@@ -13,7 +13,7 @@ import { initializeSocket } from "./lib/socket.js";
 import { connectDB } from "./lib/db.js";
 import adminRoutes from "./routes/admin.route.js";
 import authRoutes from "./routes/auth.route.js";
-import userRoutes from "./routes/user.route.js";
+import mobileAuthRoutes from "./routes/user.route.js";
 
 
 dotenv.config();
@@ -61,6 +61,7 @@ cron.schedule("0 * * * *", () => {
 	}
 });
 
+app.use("/api/auth", mobileAuthRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
