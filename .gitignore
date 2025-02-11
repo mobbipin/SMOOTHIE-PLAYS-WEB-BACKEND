@@ -9,7 +9,6 @@ node_modules/
 /src/models/song.model.js
 
 
-/src/controller/stat.controller.js
 /src/controller/album.controller.js
 
 /src/routes/album.route.js
