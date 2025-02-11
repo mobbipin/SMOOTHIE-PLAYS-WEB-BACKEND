@@ -9,7 +9,7 @@ node_modules/
 /src/models/song.model.js
 
 
-/src/controller/album.controller.js
+
 
 /src/routes/album.route.js
 /src/routes/song.route.js
