@@ -8,7 +8,7 @@ export const getAllUsers = async (req, res, next) => {
 	} catch (error) {
 	  next(error);
 	}
-  };
+  };	
 
 export const getMessages = async (req, res, next) => {
 	try {
