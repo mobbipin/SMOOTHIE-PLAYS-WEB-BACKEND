@@ -3,7 +3,6 @@ node_modules/
 
 
 /src/lib/socket.js
-/src/seeds
 /src/models/album.model.js
 /src/models/message.model.js
 /src/models/song.model.js
