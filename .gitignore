@@ -2,7 +2,7 @@ node_modules/
 .env
 
 
-/src/lib/socket.js
+
 /src/models/album.model.js
 /src/models/message.model.js
 /src/models/song.model.js
