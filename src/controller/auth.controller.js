@@ -1,4 +1,3 @@
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cloudinary from "../lib/cloudinary.js";
@@ -18,41 +17,25 @@ const uploadToCloudinary = async (file) => {
 
 // ----- GOOGLE (Clerk-style) Authentication Callback -----
 
-export const googleAuthCallback = async (req, res, next) => {
+export const authCallback = async (req, res, next) => {
   try {
+    const { id, firstName, lastName, imageUrl } = req.body;
 
-    const { id, fullName, email, imageUrl } = req.body;
-    // Find an existing user by clerkId or email.
-    let user = await User.findOne({ $or: [{ clerkId: id }, { email }] });
+    // check if user already exists
+    const user = await User.findOne({ clerkId: id });
+
     if (!user) {
-
-      user = await User.create({
-        fullName,
-        email,
-        imageUrl,
+      // signup
+      await User.create({
         clerkId: id,
+        fullName: `${firstName || ""} ${lastName || ""}`.trim(),
+        imageUrl,
       });
-    } else {
-  
-      if (!user.clerkId) {
-        user.clerkId = id;
-        await user.save();
-      }
     }
-    // FOR MOBILE USERS
-    const payload = { userId: user._id, email: user.email };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
-    res.status(200).json({
-      message: "Google authentication successful",
-      token,
-      user: {
-        userId: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        imageUrl: user.imageUrl,
-      },
-    });
+
+    res.status(200).json({ success: true });
   } catch (error) {
+    console.log("Error in auth callback", error);
     next(error);
   }
 };
@@ -62,9 +45,8 @@ export const googleAuthCallback = async (req, res, next) => {
 export const emailSignup = async (req, res, next) => {
   try {
     const { fullName, email, password } = req.body;
-    let imageUrl = req.body.photo; 
+    let imageUrl = req.body.photo;
 
-   
     if (req.files && req.files.photo) {
       imageUrl = await uploadToCloudinary(req.files.photo);
     }
@@ -87,9 +69,10 @@ export const emailSignup = async (req, res, next) => {
       clerkId: null,
     });
 
-
     const payload = { userId: user._id, email: user.email };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     res.status(201).json({
       message: "User created successfully",
       token,
@@ -118,7 +101,9 @@ export const emailLogin = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
     const payload = { userId: user._id, email: user.email };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     res.status(200).json({
       message: "Login successful",
       token,

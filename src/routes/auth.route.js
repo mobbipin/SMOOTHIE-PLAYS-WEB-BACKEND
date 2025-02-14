@@ -1,15 +1,14 @@
-
 import { Router } from "express";
 import {
-    emailLogin,
-    emailSignup,
-    googleAuthCallback,
+  authCallback,
+  emailLogin,
+  emailSignup,
 } from "../controller/auth.controller.js";
 
 const router = Router();
 
-// Google authentication endpoint (for both mobile and web)
-router.post("/google/callback", googleAuthCallback);
+// Google authentication endpoint (for  web)
+router.post("/callback", authCallback);
 
 // Email/Password signup and login endpoints (for both mobile and web)
 router.post("/signup", emailSignup);
