@@ -1,41 +1,31 @@
-import { verifyToken } from '../lib/jwt.js';
+import { clerkClient } from "@clerk/express";
 
 export const protectRoute = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1];
-    try {
-      const { userId } = verifyToken(token);
-      req.user = await User.findById(userId);
-      if (!req.user) throw new Error('User not found');
-      next();
-    } catch (error) {
-      res.status(401).json({ message: 'Invalid token' });
-    }
-  } else if (req.auth.userId) {
-    try {
-      req.user = await User.findOne({ clerkId: req.auth.userId });
-      if (!req.user) throw new Error('User not found');
-      next();
-    } catch (error) {
-      next(error);
-    }
-  } else {
-    res.status(401).json({ message: 'Unauthorized' });
+  if (!req.auth.userId) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized - you must be logged in" });
   }
+  next();
 };
 
 export const requireAdmin = async (req, res, next) => {
   try {
-    let email = req.user?.email;
-    if (!email && req.auth.userId) {
-      const clerkUser = await clerkClient.users.getUser(req.auth.userId);
-      email = clerkUser.primaryEmailAddress?.emailAddress;
+    const currentUser = await clerkClient.users.getUser(req.auth.userId);
+    const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase(); // Ensure correct formatting
+    const userEmail = currentUser.primaryEmailAddress?.emailAddress
+      .trim()
+      .toLowerCase();
+
+    console.log("Admin Email from .env:", adminEmail);
+    console.log("User Email from Clerk:", userEmail);
+
+    if (adminEmail !== userEmail) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized - you must be an admin" });
     }
-    if (email !== process.env.ADMIN_EMAIL) {
-      return res.status(403).json({ message: 'Admin access required' });
-    }
+
     next();
   } catch (error) {
     next(error);
