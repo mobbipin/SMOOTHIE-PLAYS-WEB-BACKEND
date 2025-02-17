@@ -1,4 +1,3 @@
-// controller/mobileAuth.controller.js
 import bcrypt from "bcrypt";
 import cloudinary from "../lib/cloudinary.js";
 import { User } from "../models/user.model.js";
@@ -33,8 +32,8 @@ export const mobileSignup = async (req, res, next) => {
 
     const user = await User.create({
       fullName,
-      imageUrl,
       email,
+      imageUrl,
       passwordHash,
       clerkId: null,
     });
@@ -43,34 +42,29 @@ export const mobileSignup = async (req, res, next) => {
       message: "User created successfully",
       userId: user._id,
       fullName: user.fullName,
-      imageUrl: user.imageUrl,
       email: user.email,
+      imageUrl: user.imageUrl,
     });
   } catch (error) {
     next(error);
   }
 };
+
 export const mobileLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Find the user by email
     const user = await User.findOne({ email });
     if (!user || !user.passwordHash) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Compare the password
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Create a JWT payload and sign the token
-    const payload = {
-      userId: user._id,
-      email: user.email,
-    };
+    const payload = { userId: user._id, email: user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
@@ -81,8 +75,8 @@ export const mobileLogin = async (req, res, next) => {
       user: {
         userId: user._id,
         fullName: user.fullName,
-        imageUrl: user.imageUrl,
         email: user.email,
+        imageUrl: user.imageUrl,
       },
     });
   } catch (error) {
